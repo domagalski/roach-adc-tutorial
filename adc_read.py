@@ -2,7 +2,7 @@
 
 ################################################################################
 ## This script reads the bram of an 8-input ADC
-## Copyright (C) 2014  Rachel Domagalski: idomagalski@berkeley.edu
+## Copyright (C) 2014  Rachel Domagalski: domagalski@berkeley.edu
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -72,10 +72,15 @@ if __name__ == '__main__':
         # Read out data from the FPGA.
         antennas = sorted(args.antennas)
         readout = roach.retrieve_data()
-        name = lambda s: 'ant_' + s
+        if roach.model == 1:
+            name = lambda s: 'dout' + s
+        else:
+            name = lambda s: 'ant_' + s
         outdata = {ant:readout[name(ant)] for ant in antennas}
 
         nsamples = ADC.BRAM_SIZE / 4
+        if roach.model == 1:
+            nsamples /= 2
         if args.fft:
             freq = fft.fftfreq(nsamples, 1e6 / args.samp_rate)[:nsamples/2]
             for ant in antennas:

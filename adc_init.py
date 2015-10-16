@@ -2,7 +2,7 @@
 
 ################################################################################
 ## This script reads the bram of an 8-input ADC
-## Copyright (C) 2014  Rachel Domagalski: idomagalski@berkeley.edu
+## Copyright (C) 2014  Rachel Domagalski: domagalski@berkeley.edu
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by

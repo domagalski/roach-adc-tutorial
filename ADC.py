@@ -2,7 +2,7 @@
 
 ################################################################################
 ## This module defines a class for interfacing with basic ADC readers.
-## Copyright (C) 2014  Rachel Domagalski: idomagalski@berkeley.edu
+## Copyright (C) 2014  Rachel Domagalski: domagalski@berkeley.edu
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ from corr import katcp_wrapper as _katcp
 BRAM_SIZE = 4 << 11
 DELAY     = 0.001
 
-BOF_IADC = 'iadc.bof'
+BOF_IADC = 'iadc_demux4.bof'
 BOF_QUAD = 'adc8.bof'
 BOF_ADC2 = 'adc32.bof'
 BOF_SNAP = 'snap_adc.bof'
@@ -65,7 +65,10 @@ class ADC(_katcp.FpgaClient):
         """
         Get the antenna name that the ROACH uses.
         """
-        register = 'ant_'
+        if self.model == 1:
+            register = 'dout'
+        else:
+            register = 'ant_'
         if self.model <= 2:
             register += str(ant_num)
         else:
@@ -77,7 +80,11 @@ class ADC(_katcp.FpgaClient):
         This function reads data from a BRAM for an antenna.
         """
         register = self.get_ant_name(ant_num)
-        bram_bits = _np.fromstring(self.read(register, BRAM_SIZE), '>u4')
+        if self.model == 1:
+            bram_size = BRAM_SIZE/2
+        else:
+            bram_size = BRAM_SIZE
+        bram_bits = _np.fromstring(self.read(register, bram_size), '>u4')
         return bram_bits.astype(_np.int8)
 
     def retrieve_data(self, filename=None):
@@ -111,7 +118,7 @@ class ADC(_katcp.FpgaClient):
         # 8: SNAP
         self.model = sum([n << i for i, n in enumerate(model_params)])
         if self.model == 1:
-            self.antennas = 4
+            self.antennas = 8
             self.adc_bof = BOF_IADC
             self.board = 'ROACH'
         elif self.model == 2:
