@@ -36,6 +36,8 @@ if __name__ == '__main__':
                         help='Run the ADC16 capture design.')
     adcget.add_argument('-s', '--snap', action='store_true',
                         help='Run the SNAP ADC capture design')
+    adcget.add_argument('-w', '--wideband', action='store_true',
+                        help='Run the Wideband ADC design.')
     adcget.add_argument('-k', '--kill', action='store_true',
                         help='Kill the BOF process on the FPGA.')
     args = parser.parse_args()
@@ -48,5 +50,8 @@ if __name__ == '__main__':
         roach.progdev('')
     else:
         print 'Initializing the ADC.'
-        roach.set_model([args.iadc, args.quadadc, args.adc16, args.snap])
-        sys.exit(roach.start_bof())
+        if args.wideband:
+            roach.progdev('iadc_demux4.bof')
+        else:
+            roach.set_model([args.iadc, args.quadadc, args.adc16, args.snap])
+            sys.exit(roach.start_bof())

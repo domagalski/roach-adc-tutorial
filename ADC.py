@@ -85,7 +85,8 @@ class ADC(_katcp.FpgaClient):
         else:
             bram_size = BRAM_SIZE
         bram_bits = _np.fromstring(self.read(register, bram_size), '>u4')
-        return bram_bits.astype(_np.int8)
+        return bram_bits
+        #return bram_bits.astype(_np.int8)
 
     def retrieve_data(self, filename=None):
         """
