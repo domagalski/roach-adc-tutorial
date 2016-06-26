@@ -51,7 +51,7 @@ if __name__ == '__main__':
     else:
         print 'Initializing the ADC.'
         if args.wideband:
-            roach.progdev('iadc_demux4.bof')
+            roach.progdev('iadc_demux4_zdok0.bof')
         else:
             roach.set_model([args.iadc, args.quadadc, args.adc16, args.snap])
             sys.exit(roach.start_bof())
